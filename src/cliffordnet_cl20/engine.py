@@ -2,15 +2,15 @@
 
 from __future__ import annotations
 
+import csv
 import hashlib
 import json
 import os
-import csv
 import subprocess
 import sys
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Callable
 
 import torch
 from torch import nn
@@ -174,5 +174,5 @@ def verify_checkpoint(path: Path, model_name: str) -> VerificationReport:
         result = build_model(model_name).load_state_dict(state, strict=False)
         compatible = not result.missing_keys and not result.unexpected_keys
         return VerificationReport(str(path), model_name, compatible, _digest(path), list(result.missing_keys), list(result.unexpected_keys))
-    except Exception as error:
+    except Exception as error:  # noqa: BLE001 - verification reports incompatibility instead of crashing
         return VerificationReport(str(path), model_name, False, _digest(path) if path.is_file() else None, error=str(error))

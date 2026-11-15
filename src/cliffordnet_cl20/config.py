@@ -8,7 +8,6 @@ from typing import Any
 
 import yaml
 
-
 LOCKED_PROTOCOL_KEYS = frozenset({
     "dataset", "epochs", "batch_size", "num_workers", "seed", "deterministic",
     "optimizer", "scheduler", "transforms", "normalization", "evaluation",
@@ -31,7 +30,7 @@ class ExperimentConfig:
 def _read(path: Path) -> dict[str, Any]:
     value = yaml.safe_load(path.read_text())
     if not isinstance(value, dict):
-        raise ValueError(f"configuration must be a mapping: {path}")
+        raise TypeError(f"configuration must be a mapping: {path}")
     return value
 
 

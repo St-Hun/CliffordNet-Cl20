@@ -30,7 +30,7 @@ def checkpoint_record(path: Path) -> dict[str, object]:
             "tensor_keys": len(tensors),
             "blocks": max(block_indexes) + 1 if block_indexes else None,
         }
-    except Exception as error:
+    except Exception as error:  # noqa: BLE001 - forensic scans must quarantine every unreadable artifact
         return {"file": path.name, "status": "corrupt", "detail": type(error).__name__}
 
 

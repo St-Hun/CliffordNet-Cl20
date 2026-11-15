@@ -8,7 +8,6 @@ import yaml
 
 from cliffordnet_cl20.results import render_results_table, validate_manifest
 
-
 START = "<!-- RESULTS:START -->"
 END = "<!-- RESULTS:END -->"
 

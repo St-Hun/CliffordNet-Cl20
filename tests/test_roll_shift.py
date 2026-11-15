@@ -4,7 +4,10 @@ import pytest
 import torch
 import yaml
 
-from cliffordnet_cl20.layers.roll_shift import Cl20RollShiftInteraction, roll_multivector_groups
+from cliffordnet_cl20.layers.roll_shift import (
+    Cl20RollShiftInteraction,
+    roll_multivector_groups,
+)
 from cliffordnet_cl20.models.registry import build_model, get_model_spec
 
 

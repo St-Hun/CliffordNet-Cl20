@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Mapping, Sequence
 
 import torch
 
@@ -31,7 +31,7 @@ def _state_shapes(payload) -> dict[str, tuple[int, ...]]:
     shapes = {}
     for key, value in payload.items():
         if not isinstance(key, str) or not isinstance(value, torch.Tensor):
-            raise ValueError("checkpoint contains non-tensor state")
+            raise TypeError("checkpoint contains non-tensor state")
         shapes[key] = tuple(value.shape)
     return shapes
 
@@ -40,7 +40,7 @@ def classify_checkpoint(path: Path, candidates: Sequence[CheckpointCandidate]) -
     try:
         payload = torch.load(path, map_location="cpu", weights_only=True)
         shapes = _state_shapes(payload)
-    except Exception as error:
+    except Exception as error:  # noqa: BLE001 - corrupt checkpoints are expected forensic inputs
         return Classification("corrupt", detail=f"{type(error).__name__}: {error}")
     matches = tuple(candidate.name for candidate in candidates if dict(candidate.state_shapes) == shapes)
     if len(matches) == 1:

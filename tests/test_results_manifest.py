@@ -4,7 +4,11 @@ from pathlib import Path
 import pytest
 import yaml
 
-from cliffordnet_cl20.results import ManifestError, render_results_table, validate_manifest
+from cliffordnet_cl20.results import (
+    ManifestError,
+    render_results_table,
+    validate_manifest,
+)
 
 
 @pytest.fixture

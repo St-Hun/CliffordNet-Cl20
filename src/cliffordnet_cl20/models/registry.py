@@ -45,13 +45,13 @@ def build_model(name: str, num_classes: int = 100):
     model_type = OfficialCliffordNet if spec.family == "official" else Cl20RollShiftNet if spec.family == "roll_shift" else Cl20ShuffleNet if spec.family == "shuffle" else None
     if model_type is None:
         raise NotImplementedError(spec.family)
-    kwargs = dict(
-        num_classes=num_classes,
-        patch_size=spec.patch_size,
-        embed_dim=spec.embed_dim,
-        depth=spec.depth,
-        drop_path_rate=spec.drop_path_rate,
-    )
+    kwargs = {
+        "num_classes": num_classes,
+        "patch_size": spec.patch_size,
+        "embed_dim": spec.embed_dim,
+        "depth": spec.depth,
+        "drop_path_rate": spec.drop_path_rate,
+    }
     if spec.family == "official":
         kwargs["cli_mode"] = spec.cli_mode
         kwargs["shifts"] = spec.shifts
