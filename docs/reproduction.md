@@ -2,7 +2,9 @@
 
 ## Environment
 
-Python 3.10 is locked by `pyproject.toml` and dependencies are frozen in `uv.lock`.
+The lockfile reproduces the original CAN software stack: Python 3.10,
+PyTorch 2.10.0, TorchVision 0.25.0, and optional Triton 3.6.0. The reported runs
+used an NVIDIA GeForce RTX 4090 24GB with CUDA 12.9 on Linux.
 
 ```bash
 uv sync

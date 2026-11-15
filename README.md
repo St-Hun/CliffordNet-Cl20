@@ -30,7 +30,7 @@ and evaluation protocol, while changing only the geometric channel interaction:
    provide two controlled ways to mix distant multivector groups without
    abandoning the algebraic structure.
 
-### 🔄 Roll & Shift
+### 🔄 How Roll & Shift works
 
 For each branch, the commuting pair is rolled by `+s` and the anticommuting pair
 by `-s` before the full geometric product. Including `s=0` retains an unshifted,
@@ -38,7 +38,7 @@ complete Clifford product. The intent is to preserve the original CliffordNet
 comparison framework while replacing scalar-channel approximations with actual
 Cl(2,0) multivector interactions.
 
-### 🔀 Geometric Shuffle
+### 🔀 How Geometric Shuffle works
 
 Geometric Shuffle replaces shift distance with a deterministic ShuffleNet-style
 group permutation. The same bijection is applied to both complex pairs, which
@@ -47,43 +47,66 @@ combined with several shuffled branches and projected back to the original
 width. The intent is to reduce dependence on hand-selected shift magnitudes and
 mix distant multivector groups more uniformly.
 
-## 📊 Direct comparison
+## 📊 Results
 
-The official and Roll & Shift values use the locked 200-epoch CIFAR-100
-protocol. The Shuffle values come from archived 200-epoch, seed-42 CIFAR-100
-logs; those logs do not retain every resolved transform and optimizer field.
-Accuracy differences are absolute percentage points, and parameter differences
-use exact model counts. Each proposed model is placed directly beside the
-official CliffordNet model at the nearest parameter scale.
+All values are CIFAR-100 Top-1 accuracy. Each proposed model is compared with
+the closest official CliffordNet parameter scale; `Δ Acc.` is an absolute
+percentage-point difference and `Δ Params` is relative to that baseline.
 
-> 🏆 **Best efficiency:** Roll & Shift 52-3 keeps **82.46%** accuracy while
-> removing **3.32M parameters (38.5%)** from CliffordNet-64.
->
-> 🚀 **Largest accuracy gain:** Shuffle 26 improves CliffordNet-Lite by
-> **+1.97 percentage points** at a small **+1.8%** parameter cost.
+> 🏆 Roll & Shift 52-3 matches CliffordNet-64 at **82.46%** with **38.5% fewer
+> parameters**. Shuffle 26 produces the largest accuracy gain: **+1.97 pp** over
+> CliffordNet-Lite.
 
-| Scale | Official baseline (Top-1 / Params) | Proposed variant | Top-1 | Params | Δ Accuracy | Δ Params |
-|---|---|---|---:|---:|---:|---:|
-| Nano | CliffordNet-Nano (77.82% / 1,433,188) | 🔄 Roll 16-2 | 78.37% | 1,380,836 | +0.55 pp | -3.7% |
-| Nano | CliffordNet-Nano (77.82% / 1,433,188) | 🔀 Shuffle 14 `[2,4,8]` | 78.74% | 1,439,716 | +0.92 pp | +0.5% |
-| Tiny | CliffordNet-Lite (79.05% / 2,612,836) | 🔄 Roll 18-5 | 79.92% | 2,436,068 | +0.87 pp | -6.8% |
-| Tiny | CliffordNet-Lite (79.05% / 2,612,836) | 🔄 Roll 25-3 | 80.57% | 2,557,668 | +1.52 pp | -2.1% |
-| Tiny | CliffordNet-Lite (79.05% / 2,612,836) | 🔀 Shuffle 26 `[2,4,8]` | 81.02% | 2,659,300 | **+1.97 pp** | +1.8% |
-| Small | CliffordNet-32 (81.42% / 4,842,084) | 🔄 Roll 32-5 | 81.45% | 4,317,668 | +0.03 pp | -10.8% |
-| Small | CliffordNet-32 (81.42% / 4,842,084) | 🔄 Roll 48-2 | 81.79% | 4,108,772 | +0.37 pp | -15.1% |
-| Small | CliffordNet-32 (81.42% / 4,842,084) | 🔀 Shuffle 56 `[2,4,8]` | 81.61% | 4,790,756 | +0.19 pp | -1.1% |
-| Large | CliffordNet-64 (82.46% / 8,618,596) | 🏆 Roll 52-3 | **82.46%** | 5,301,732 | 0.00 pp | **-38.5%** |
-| Large | CliffordNet-64 (82.46% / 8,618,596) | ⚖️ Shuffle 64 `[2,4,6]` | 81.81% | 5,472,740 | -0.65 pp | -36.5% |
+### Official CliffordNet baselines
 
-### 📌 Takeaways
+| Baseline | Top-1 | Parameters |
+|---|---:|---:|
+| CliffordNet-Nano | 77.82% | 1,433,188 |
+| CliffordNet-Lite | 79.05% | 2,612,836 |
+| CliffordNet-32 | 81.42% | 4,842,084 |
+| CliffordNet-64 | 82.46% | 8,618,596 |
 
-- **Roll & Shift provides the strongest accuracy-efficiency frontier.** Every
-  listed Roll model matches or improves its official baseline while using fewer
-  parameters.
-- **Geometric Shuffle is strongest at small and medium scales.** Shuffle 14 and
-  26 improve their baselines by 0.92 and 1.97 points.
-- **The large Shuffle model favors efficiency.** Shuffle 64 gives up 0.65 points
-  but removes 3.15M parameters from CliffordNet-64.
+### 🔄 Roll & Shift
+
+| Variant | Shifts | Compared with | Top-1 (Δ Acc.) | Parameters (Δ Params) |
+|---|---|---|---:|---:|
+| Roll 16-2 | `[0,1]` | Nano | 78.37% (+0.55 pp) | 1,380,836 (-3.7%) |
+| Roll 18-5 | `[0,1,2,4,8]` | Lite | 79.92% (+0.87 pp) | 2,436,068 (-6.8%) |
+| Roll 25-3 | `[0,1,2]` | Lite | 80.57% (+1.52 pp) | 2,557,668 (-2.1%) |
+| Roll 32-5 | `[0,1,2,4,8]` | 32 | 81.45% (+0.03 pp) | 4,317,668 (-10.8%) |
+| Roll 48-2 | `[0,1]` | 32 | 81.79% (+0.37 pp) | 4,108,772 (-15.1%) |
+| Roll 52-3 | `[0,1,2]` | 64 | **82.46% (0.00 pp)** | **5,301,732 (-38.5%)** |
+
+Every listed Roll & Shift model matches or improves its nearest official
+baseline while using fewer parameters.
+
+### 🔀 Geometric Shuffle
+
+| Variant | Groups | Compared with | Top-1 (Δ Acc.) | Parameters (Δ Params) |
+|---|---|---|---:|---:|
+| Shuffle 14 | `[2,4,8]` | Nano | 78.74% (+0.92 pp) | 1,439,716 (+0.5%) |
+| Shuffle 26 | `[2,4,8]` | Lite | **81.02% (+1.97 pp)** | 2,659,300 (+1.8%) |
+| Shuffle 56 | `[2,4,8]` | 32 | 81.61% (+0.19 pp) | 4,790,756 (-1.1%) |
+| Shuffle 64 | `[2,4,6]` | 64 | 81.81% (-0.65 pp) | 5,472,740 (-36.5%) |
+
+Runnable configurations are included for Shuffle 14 and 26, whose architecture
+and parameter counts match the retained implementation exactly. Shuffle 56 and
+64 are historical result rows because their final architecture was not
+preserved completely.
+
+## 🖥️ Original CAN execution environment
+
+The reported experiments were run in the original CAN environment, not in a
+separate benchmark setup.
+
+- **Hardware:** NVIDIA GeForce RTX 4090 24GB
+- **System:** Linux 6.8.0-106-generic, CUDA 12.9
+- **Runtime:** Python 3.10.19, PyTorch 2.10.0, TorchVision 0.25.0, Triton 3.6.0
+- **Dataset:** CIFAR-100, 200 epochs, batch size 128, seed 42
+- **Optimization:** AdamW, learning rate `1e-3`, weight decay `0.1`, cosine
+  annealing, no warm-up
+- **Augmentation:** random crop with 4-pixel padding, horizontal flip,
+  CIFAR-10 AutoAugment, and random erasing with probability 0.25
 
 ## 🚀 Quick start
 
@@ -98,52 +121,6 @@ uv run python scripts/train.py \
 
 For a short integration check, append `--epochs-smoke 1`. See
 [docs/reproduction.md](docs/reproduction.md) for resume and evaluation commands.
-
-## 📈 Results
-
-Accuracy values below are historical CIFAR-100 results. Parameter counts are
-computed from registered models or recorded by the archived training logs.
-
-<!-- RESULTS:START -->
-
-### 🧱 Official CliffordNet
-
-| Model | Parameters | Top-1 |
-|---|---:|---:|
-| `official_nano` | 1,433,188 | 77.82% |
-| `official_lite` | 2,612,836 | 79.05% |
-| `official_d32` | 4,842,084 | 81.42% |
-| `official_d64` | 8,618,596 | 82.46% |
-
-### 🔄 Cl(2,0) Roll & Shift
-
-| Model | Parameters | Top-1 |
-|---|---:|---:|
-| `roll_shift_d16_s2` | 1,380,836 | 78.37% |
-| `roll_shift_d18_s5` | 2,436,068 | 79.92% |
-| `roll_shift_d25_s3` | 2,557,668 | 80.57% |
-| `roll_shift_d32_s5` | 4,317,668 | 81.45% |
-| `roll_shift_d48_s2` | 4,108,772 | 81.79% |
-| `roll_shift_d52_s3` | 5,301,732 | 82.46% |
-
-### 🔀 Geometric Shuffle
-
-| Model | Parameters | Top-1 |
-|---|---:|---:|
-| `shuffle_d14_g2_4_8` | 1,439,716 | 78.74% |
-| `shuffle_d26_g2_4_8` | 2,659,300 | 81.02% |
-| `shuffle_d56_g2_4_8` | 4,790,756 | 81.61% |
-| `shuffle_d64_g2_4_6` | 5,472,740 | 81.81% |
-
-<!-- RESULTS:END -->
-
-Runnable configurations are included for Shuffle 14 and 26, whose architecture
-and parameter counts match the retained implementation exactly. Shuffle 56 and
-64 are kept here as historical results only because their final architecture
-was not preserved completely.
-
-The two 82.46% entries are different experiments: official CliffordNet-64 and
-Roll & Shift 52-3.
 
 ## 🗂 Repository scope
 
