@@ -57,3 +57,69 @@ def extract_run_record(run_dir: Path) -> dict[str, object]:
     summary = json.loads(summary_path.read_text(encoding="utf-8")) if summary_path.exists() else {}
     allowed = {"epoch", "best_acc", "test_acc", "train_acc", "train_loss", "lr"}
     return {"run_id": run_dir.name.removeprefix("run-"), "summary": {key: summary[key] for key in allowed if key in summary}}
+
+
+class ManifestError(ValueError):
+    """Raised when a result lacks sufficient reproducibility evidence."""
+
+
+RESULT_STATUSES = {"official_reported", "portfolio_reported", "historical_verified", "reproduced", "source_only"}
+
+
+def validate_manifest(data: Mapping, root: Path = Path(".")) -> None:
+    from .models.registry import build_model
+
+    rows = data.get("results")
+    if not isinstance(rows, list):
+        raise ManifestError("results must be a list")
+    identities = set()
+    for row in rows:
+        if row.get("status") not in RESULT_STATUSES:
+            raise ManifestError(f"unknown status: {row.get('status')}")
+        identity = (row.get("model"), row.get("protocol"), row.get("seed"))
+        if identity in identities:
+            raise ManifestError(f"duplicate result identity: {identity}")
+        identities.add(identity)
+        evidence = row.get("evidence")
+        if not evidence:
+            raise ManifestError(f"result has no evidence: {identity}")
+        for relative in evidence:
+            path = Path(relative)
+            if path.is_absolute() or ".." in path.parts:
+                raise ManifestError("evidence paths must be repository-relative")
+            if not (root / path).is_file():
+                raise ManifestError(f"evidence path does not exist: {relative}")
+        try:
+            expected = sum(parameter.numel() for parameter in build_model(row["model"]).parameters())
+        except (KeyError, NotImplementedError):
+            expected = row.get("parameters")
+        if row.get("parameters") != expected:
+            raise ManifestError(f"parameter count mismatch for {row.get('model')}: {row.get('parameters')} != {expected}")
+        if row["status"] == "reproduced":
+            complete = False
+            for relative in evidence:
+                try:
+                    record = json.loads((root / relative).read_text())
+                    complete |= record.get("status") == "complete"
+                except (json.JSONDecodeError, UnicodeDecodeError):
+                    pass
+            if not complete:
+                raise ManifestError("reproduced result requires a complete run record")
+
+
+def render_results_table(data: Mapping) -> str:
+    titles = {
+        "official": "Official CliffordNet",
+        "roll_shift": "Cl(2,0) Roll & Shift",
+        "shuffle": "Geometric Shuffle",
+    }
+    lines = []
+    for family in ("official", "roll_shift", "shuffle"):
+        lines.extend((f"### {titles[family]}", "", "| Model | Parameters | Top-1 | Status |", "|---|---:|---:|---|"))
+        for row in data["results"]:
+            if row["family"] != family:
+                continue
+            accuracy = "-" if row.get("top1") is None else f"{row['top1']:.2f}%"
+            lines.append(f"| `{row['model']}` | {row['parameters']:,} | {accuracy} | `{row['status']}` |")
+        lines.append("")
+    return "\n".join(lines).rstrip()

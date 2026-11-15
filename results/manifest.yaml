@@ -1,0 +1,14 @@
+schema_version: 1
+protocol: cifar100_official_2026_02
+results:
+  - {family: official, model: official_nano, parameters: 1433188, top1: 77.82, status: official_reported, protocol: cifar100_official_2026_02, seed: official_unspecified, evidence: [docs/portfolio-results-transcription.md]}
+  - {family: official, model: official_lite, parameters: 2612836, top1: 79.05, status: official_reported, protocol: cifar100_official_2026_02, seed: official_unspecified, evidence: [docs/portfolio-results-transcription.md]}
+  - {family: official, model: official_d32, parameters: 4842084, top1: 81.42, status: official_reported, protocol: cifar100_official_2026_02, seed: official_unspecified, evidence: [docs/portfolio-results-transcription.md]}
+  - {family: official, model: official_d64, parameters: 8618596, top1: 82.46, status: official_reported, protocol: cifar100_official_2026_02, seed: official_unspecified, evidence: [docs/portfolio-results-transcription.md]}
+  - {family: roll_shift, model: roll_shift_d16_s2, parameters: 1380836, top1: 78.37, status: portfolio_reported, protocol: cifar100_official_2026_02, seed: portfolio_unspecified, evidence: [docs/portfolio-results-transcription.md]}
+  - {family: roll_shift, model: roll_shift_d18_s5, parameters: 2436068, top1: 79.92, status: portfolio_reported, protocol: cifar100_official_2026_02, seed: portfolio_unspecified, evidence: [docs/portfolio-results-transcription.md]}
+  - {family: roll_shift, model: roll_shift_d25_s3, parameters: 2557668, top1: 80.57, status: historical_verified, protocol: cifar100_official_2026_02, seed: historical_unspecified, evidence: [docs/portfolio-results-transcription.md, results/recovery-report.json]}
+  - {family: roll_shift, model: roll_shift_d32_s5, parameters: 4317668, top1: 81.45, status: portfolio_reported, protocol: cifar100_official_2026_02, seed: portfolio_unspecified, evidence: [docs/portfolio-results-transcription.md]}
+  - {family: roll_shift, model: roll_shift_d48_s2, parameters: 4108772, top1: 81.79, status: portfolio_reported, protocol: cifar100_official_2026_02, seed: portfolio_unspecified, evidence: [docs/portfolio-results-transcription.md]}
+  - {family: roll_shift, model: roll_shift_d52_s3, parameters: 5301732, top1: 82.46, status: portfolio_reported, protocol: cifar100_official_2026_02, seed: portfolio_unspecified, evidence: [docs/portfolio-results-transcription.md, docs/reference-inventory.md]}
+  - {family: shuffle, model: shuffle_d24_g2_4_8_16_32, parameters: 3242468, top1: null, status: source_only, protocol: cifar100_official_2026_02, seed: not_run, evidence: [configs/shuffle/d24_g2_4_8_16_32.yaml, docs/provenance.md]}
