@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from .official import OfficialCliffordNet
 from .roll_shift import Cl20RollShiftNet
+from .shuffle import Cl20ShuffleNet
 
 
 @dataclass(frozen=True)
@@ -28,6 +29,7 @@ _SPECS = {
     "roll_shift_d32_s5": ModelSpec("roll_shift", 32, (0, 1, 2, 4, 8)),
     "roll_shift_d48_s2": ModelSpec("roll_shift", 48, (0, 1)),
     "roll_shift_d52_s3": ModelSpec("roll_shift", 52, (0, 1, 2)),
+    "shuffle_d24_g2_4_8_16_32": ModelSpec("shuffle", 24, (2, 4, 8, 16, 32)),
 }
 
 
@@ -40,17 +42,21 @@ def get_model_spec(name: str) -> ModelSpec:
 
 def build_model(name: str, num_classes: int = 100):
     spec = get_model_spec(name)
-    model_type = OfficialCliffordNet if spec.family == "official" else Cl20RollShiftNet if spec.family == "roll_shift" else None
+    model_type = OfficialCliffordNet if spec.family == "official" else Cl20RollShiftNet if spec.family == "roll_shift" else Cl20ShuffleNet if spec.family == "shuffle" else None
     if model_type is None:
         raise NotImplementedError(spec.family)
     kwargs = dict(
         num_classes=num_classes,
         patch_size=spec.patch_size,
         embed_dim=spec.embed_dim,
-        shifts=spec.shifts,
         depth=spec.depth,
         drop_path_rate=spec.drop_path_rate,
     )
     if spec.family == "official":
         kwargs["cli_mode"] = spec.cli_mode
+        kwargs["shifts"] = spec.shifts
+    elif spec.family == "roll_shift":
+        kwargs["shifts"] = spec.shifts
+    else:
+        kwargs["groups"] = spec.shifts
     return model_type(**kwargs)
