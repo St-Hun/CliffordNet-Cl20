@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from utils import DropPath
+from .utils import DropPath
 from clifford_thrust import LayerNorm2d, CliffordInteraction        
 
 

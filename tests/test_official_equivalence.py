@@ -1,8 +1,8 @@
 import torch
 
 from cliffordnet_cl20.models.registry import build_model, get_model_spec
-from networks import cliffordnet_12_2 as upstream_nano
-from networks import cliffordnet_12_5 as upstream_lite
+from vendor.can_28119c5.networks import cliffordnet_12_2 as upstream_nano
+from vendor.can_28119c5.networks import cliffordnet_12_5 as upstream_lite
 
 
 def _assert_equivalent(name: str, upstream_factory) -> None:

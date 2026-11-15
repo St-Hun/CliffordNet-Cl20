@@ -1,4 +1,4 @@
-from model import CliffordNet
+from .model import CliffordNet
     
     
 def gen_shifts(n):

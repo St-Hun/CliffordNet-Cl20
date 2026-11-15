@@ -72,6 +72,7 @@ Shift 52-3.
 - `configs/`: explicit architecture and locked protocol configurations
 - `results/manifest.yaml`: machine-validated claims and evidence
 - `docs/provenance.md`: reconstruction decisions and unresolved evidence
+- `vendor/can_28119c5/`: pinned official source used only for equivalence tests
 
 No upstream license file was present in the pinned source snapshot. This local
 derivative therefore does not invent a license; review upstream licensing before

@@ -8,9 +8,9 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 from dataclasses import dataclass
 import argparse
-from model import CliffordNet
-from networks import cliffordnet_12_2, cliffordnet_12_5, cliffordnet_32_3 
-from utils import seed_everything
+from .model import CliffordNet
+from .networks import cliffordnet_12_2, cliffordnet_12_5, cliffordnet_32_3
+from .utils import seed_everything
 # from hybrid_model import clifford_hybrid_nano
 
 # --- Configuration ---
