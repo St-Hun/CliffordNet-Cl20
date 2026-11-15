@@ -1,0 +1,9 @@
+model: official_d32
+family: official
+depth: 32
+embed_dim: 128
+patch_size: 2
+cli_mode: full
+context_mode: diff
+shifts: [1, 2, 4]
+drop_path_rate: 0.3
