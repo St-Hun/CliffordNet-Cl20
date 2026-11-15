@@ -135,6 +135,6 @@ def render_results_table(data: Mapping) -> str:
             if row["family"] != family:
                 continue
             accuracy = "-" if row.get("top1") is None else f"{row['top1']:.2f}%"
-            lines.append(f"| `{row['model']}` | {row['parameters']:,} | **{accuracy}** |")
+            lines.append(f"| `{row['model']}` | {row['parameters']:,} | {accuracy} |")
         lines.append("")
     return "\n".join(lines).rstrip()

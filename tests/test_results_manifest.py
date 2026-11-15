@@ -32,6 +32,7 @@ def test_public_results_table_hides_evidence_status_and_uses_visual_family_label
     assert "🧱 Official CliffordNet" in rendered
     assert "🔄 Cl(2,0) Roll & Shift" in rendered
     assert "🔀 Geometric Shuffle" in rendered
+    assert "**77.82%**" not in rendered
 
 
 @pytest.mark.parametrize("mutation,match", [

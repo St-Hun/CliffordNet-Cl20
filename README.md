@@ -67,16 +67,16 @@ official CliffordNet model at the nearest parameter scale.
 
 | Scale | Official baseline (Top-1 / Params) | Proposed variant | Top-1 | Params | Δ Accuracy | Δ Params |
 |---|---|---|---:|---:|---:|---:|
-| Nano | CliffordNet-Nano (77.82% / 1,433,188) | 🔄 Roll 16-2 | **78.37%** | 1,380,836 | **+0.55 pp** | **-3.7%** |
-| Nano | CliffordNet-Nano (77.82% / 1,433,188) | 🔀 Shuffle 14 `[2,4,8]` | **78.74%** | 1,439,716 | **+0.92 pp** | +0.5% |
-| Tiny | CliffordNet-Lite (79.05% / 2,612,836) | 🔄 Roll 18-5 | **79.92%** | 2,436,068 | **+0.87 pp** | **-6.8%** |
-| Tiny | CliffordNet-Lite (79.05% / 2,612,836) | 🔄 Roll 25-3 | **80.57%** | 2,557,668 | **+1.52 pp** | **-2.1%** |
-| Tiny | CliffordNet-Lite (79.05% / 2,612,836) | 🔀 Shuffle 26 `[2,4,8]` | **81.02%** | 2,659,300 | **+1.97 pp** | +1.8% |
-| Small | CliffordNet-32 (81.42% / 4,842,084) | 🔄 Roll 32-5 | **81.45%** | 4,317,668 | **+0.03 pp** | **-10.8%** |
-| Small | CliffordNet-32 (81.42% / 4,842,084) | 🔄 Roll 48-2 | **81.79%** | 4,108,772 | **+0.37 pp** | **-15.1%** |
-| Small | CliffordNet-32 (81.42% / 4,842,084) | 🔀 Shuffle 56 `[2,4,8]` | **81.61%** | 4,790,756 | **+0.19 pp** | **-1.1%** |
-| Large | CliffordNet-64 (82.46% / 8,618,596) | 🏆 Roll 52-3 | **82.46%** | 5,301,732 | **0.00 pp** | **-38.5%** |
-| Large | CliffordNet-64 (82.46% / 8,618,596) | ⚖️ Shuffle 64 `[2,4,6]` | **81.81%** | 5,472,740 | -0.65 pp | **-36.5%** |
+| Nano | CliffordNet-Nano (77.82% / 1,433,188) | 🔄 Roll 16-2 | 78.37% | 1,380,836 | +0.55 pp | -3.7% |
+| Nano | CliffordNet-Nano (77.82% / 1,433,188) | 🔀 Shuffle 14 `[2,4,8]` | 78.74% | 1,439,716 | +0.92 pp | +0.5% |
+| Tiny | CliffordNet-Lite (79.05% / 2,612,836) | 🔄 Roll 18-5 | 79.92% | 2,436,068 | +0.87 pp | -6.8% |
+| Tiny | CliffordNet-Lite (79.05% / 2,612,836) | 🔄 Roll 25-3 | 80.57% | 2,557,668 | +1.52 pp | -2.1% |
+| Tiny | CliffordNet-Lite (79.05% / 2,612,836) | 🔀 Shuffle 26 `[2,4,8]` | 81.02% | 2,659,300 | **+1.97 pp** | +1.8% |
+| Small | CliffordNet-32 (81.42% / 4,842,084) | 🔄 Roll 32-5 | 81.45% | 4,317,668 | +0.03 pp | -10.8% |
+| Small | CliffordNet-32 (81.42% / 4,842,084) | 🔄 Roll 48-2 | 81.79% | 4,108,772 | +0.37 pp | -15.1% |
+| Small | CliffordNet-32 (81.42% / 4,842,084) | 🔀 Shuffle 56 `[2,4,8]` | 81.61% | 4,790,756 | +0.19 pp | -1.1% |
+| Large | CliffordNet-64 (82.46% / 8,618,596) | 🏆 Roll 52-3 | **82.46%** | 5,301,732 | 0.00 pp | **-38.5%** |
+| Large | CliffordNet-64 (82.46% / 8,618,596) | ⚖️ Shuffle 64 `[2,4,6]` | 81.81% | 5,472,740 | -0.65 pp | -36.5% |
 
 ### 📌 Takeaways
 
@@ -115,30 +115,30 @@ without adding provenance labels to the public-facing tables.
 
 | Model | Parameters | Top-1 |
 |---|---:|---:|
-| `official_nano` | 1,433,188 | **77.82%** |
-| `official_lite` | 2,612,836 | **79.05%** |
-| `official_d32` | 4,842,084 | **81.42%** |
-| `official_d64` | 8,618,596 | **82.46%** |
+| `official_nano` | 1,433,188 | 77.82% |
+| `official_lite` | 2,612,836 | 79.05% |
+| `official_d32` | 4,842,084 | 81.42% |
+| `official_d64` | 8,618,596 | 82.46% |
 
 ### 🔄 Cl(2,0) Roll & Shift
 
 | Model | Parameters | Top-1 |
 |---|---:|---:|
-| `roll_shift_d16_s2` | 1,380,836 | **78.37%** |
-| `roll_shift_d18_s5` | 2,436,068 | **79.92%** |
-| `roll_shift_d25_s3` | 2,557,668 | **80.57%** |
-| `roll_shift_d32_s5` | 4,317,668 | **81.45%** |
-| `roll_shift_d48_s2` | 4,108,772 | **81.79%** |
-| `roll_shift_d52_s3` | 5,301,732 | **82.46%** |
+| `roll_shift_d16_s2` | 1,380,836 | 78.37% |
+| `roll_shift_d18_s5` | 2,436,068 | 79.92% |
+| `roll_shift_d25_s3` | 2,557,668 | 80.57% |
+| `roll_shift_d32_s5` | 4,317,668 | 81.45% |
+| `roll_shift_d48_s2` | 4,108,772 | 81.79% |
+| `roll_shift_d52_s3` | 5,301,732 | 82.46% |
 
 ### 🔀 Geometric Shuffle
 
 | Model | Parameters | Top-1 |
 |---|---:|---:|
-| `shuffle_d14_g2_4_8` | 1,439,716 | **78.74%** |
-| `shuffle_d26_g2_4_8` | 2,659,300 | **81.02%** |
-| `shuffle_d56_g2_4_8` | 4,790,756 | **81.61%** |
-| `shuffle_d64_g2_4_6` | 5,472,740 | **81.81%** |
+| `shuffle_d14_g2_4_8` | 1,439,716 | 78.74% |
+| `shuffle_d26_g2_4_8` | 2,659,300 | 81.02% |
+| `shuffle_d56_g2_4_8` | 4,790,756 | 81.61% |
+| `shuffle_d64_g2_4_6` | 5,472,740 | 81.81% |
 
 <!-- RESULTS:END -->
 
