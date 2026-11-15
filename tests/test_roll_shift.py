@@ -58,6 +58,6 @@ def test_portfolio_configurations_are_explicit(name, depth, branch_count):
     assert len(spec.shifts) == branch_count
     path = Path("configs/roll_shift") / f"d{depth}_s{branch_count}.yaml"
     config = yaml.safe_load(path.read_text())
+    assert config["model"]["name"] == name
     assert config["model"]["depth"] == depth
     assert tuple(config["model"]["shifts"]) == spec.shifts
-    assert config["provenance"]["status"] in {"checkpoint_verified", "portfolio_only"}

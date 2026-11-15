@@ -56,14 +56,22 @@ def test_interaction_has_original_plus_shuffle_branches():
     assert layer.proj.in_channels == 32 * 4
 
 
-def test_only_source_evidenced_shuffle_configuration_is_registered():
-    name = "shuffle_d24_g2_4_8_16_32"
+@pytest.mark.parametrize(
+    "name,depth,parameters",
+    [
+        ("shuffle_d14_g2_4_8", 14, 1_439_716),
+        ("shuffle_d26_g2_4_8", 26, 2_659_300),
+    ],
+)
+def test_log_verified_shuffle_configurations_are_registered(name, depth, parameters):
     spec = get_model_spec(name)
     assert spec.family == "shuffle"
-    assert spec.depth == 24
-    assert spec.shifts == (2, 4, 8, 16, 32)
+    assert spec.depth == depth
+    assert spec.shifts == (2, 4, 8)
     model = build_model(name)
-    assert len(model.blocks) == 24
-    config = yaml.safe_load(Path("configs/shuffle/d24_g2_4_8_16_32.yaml").read_text())
-    assert config["provenance"]["status"] == "source_recovered"
-    assert config["results"] == []
+    assert len(model.blocks) == depth
+    assert sum(parameter.numel() for parameter in model.parameters()) == parameters
+    config = yaml.safe_load((Path("configs/shuffle") / f"d{depth}_g2_4_8.yaml").read_text())
+    assert config["model"]["name"] == name
+    assert config["model"]["depth"] == depth
+    assert config["model"]["groups"] == [2, 4, 8]

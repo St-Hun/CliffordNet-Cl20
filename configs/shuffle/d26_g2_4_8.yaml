@@ -1,0 +1,7 @@
+model:
+  name: shuffle_d26_g2_4_8
+  family: shuffle
+  depth: 26
+  groups: [2, 4, 8]
+  embed_dim: 128
+  patch_size: 2

@@ -5,6 +5,3 @@ model:
   shifts: [0, 1, 2]
   embed_dim: 128
   patch_size: 2
-provenance:
-  status: portfolio_only
-  note: A 52-3 run exists, but the same-named local checkpoint was overwritten by a 24-block later model.

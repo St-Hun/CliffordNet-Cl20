@@ -29,7 +29,8 @@ _SPECS = {
     "roll_shift_d32_s5": ModelSpec("roll_shift", 32, (0, 1, 2, 4, 8)),
     "roll_shift_d48_s2": ModelSpec("roll_shift", 48, (0, 1)),
     "roll_shift_d52_s3": ModelSpec("roll_shift", 52, (0, 1, 2)),
-    "shuffle_d24_g2_4_8_16_32": ModelSpec("shuffle", 24, (2, 4, 8, 16, 32)),
+    "shuffle_d14_g2_4_8": ModelSpec("shuffle", 14, (2, 4, 8)),
+    "shuffle_d26_g2_4_8": ModelSpec("shuffle", 26, (2, 4, 8)),
 }
 
 

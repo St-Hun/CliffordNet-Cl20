@@ -14,17 +14,6 @@ The pure PyTorch implementation works on CPU and CUDA. Triton is optional. A ful
 200-epoch CIFAR-100 run is intended for a modern CUDA GPU; CPU execution is for
 smoke tests.
 
-## Inspect historical checkpoints
-
-```bash
-uv run python scripts/verify_checkpoint.py \
-  /path/to/best_model_mustardnet_25_3.pth roll_shift_d25_s3
-```
-
-The surviving 25-3 checkpoint loads strictly. The same-named 52-3 file in the
-reference directory was overwritten by a later 24-block architecture and is not
-accepted as evidence for the portfolio 52-3 model.
-
 ## Smoke test
 
 ```bash

@@ -1,4 +1,4 @@
-"""Later experimental Geometric Shuffle variant recovered from source."""
+"""Cl(2,0) Geometric Shuffle model."""
 
 from __future__ import annotations
 
@@ -37,7 +37,7 @@ class Cl20ShuffleBlock(nn.Module):
 
 class Cl20ShuffleNet(nn.Module):
     def __init__(self, num_classes: int = 100, patch_size: int = 2, embed_dim: int = 128,
-                 groups: tuple[int, ...] = (2, 4, 8, 16, 32), depth: int = 24,
+                 groups: tuple[int, ...] = (2, 4, 8), depth: int = 14,
                  drop_path_rate: float = 0.3):
         super().__init__()
         if embed_dim % 4:

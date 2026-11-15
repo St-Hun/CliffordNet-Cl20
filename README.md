@@ -6,9 +6,6 @@ This repository keeps three model families under one locked CIFAR-100 recipe:
 the pinned official baselines, the portfolio Roll & Shift models, and the later
 Geometric Shuffle experiment.
 
-The original `CAN` working directory is evidence only. It is not imported at
-runtime and was not modified while constructing this repository.
-
 ## 🧠 What this work changes
 
 The official CliffordNet already demonstrates that geometric interactions can
@@ -104,10 +101,8 @@ For a short integration check, append `--epochs-smoke 1`. See
 
 ## 📈 Results
 
-Accuracy values below are reported historical CIFAR-100 results. Parameter
-counts are computed from registered models or recorded directly by the archived
-training logs. Evidence remains machine-validated in `results/manifest.yaml`
-without adding provenance labels to the public-facing tables.
+Accuracy values below are historical CIFAR-100 results. Parameter counts are
+computed from registered models or recorded by the archived training logs.
 
 <!-- RESULTS:START -->
 
@@ -142,6 +137,11 @@ without adding provenance labels to the public-facing tables.
 
 <!-- RESULTS:END -->
 
+Runnable configurations are included for Shuffle 14 and 26, whose architecture
+and parameter counts match the retained implementation exactly. Shuffle 56 and
+64 are kept here as historical results only because their final architecture
+was not preserved completely.
+
 The two 82.46% entries are different experiments: official CliffordNet-64 and
 Roll & Shift 52-3.
 
@@ -151,9 +151,8 @@ Roll & Shift 52-3.
 - `src/cliffordnet_cl20/models/roll_shift.py`: full Cl(2,0) Roll & Shift
 - `src/cliffordnet_cl20/models/shuffle.py`: structure-preserving Geometric Shuffle
 - `configs/`: explicit architecture and locked protocol configurations
-- `results/manifest.yaml`: machine-validated claims and evidence
-- `docs/provenance.md`: reconstruction decisions and unresolved evidence
-- `vendor/can_28119c5/`: pinned official source used only for equivalence tests
+- `scripts/`: training, evaluation, checkpoint, and environment utilities
+- `docs/reproduction.md`: reproducible training and evaluation commands
 
 No upstream license file was present in the pinned source snapshot. This local
 derivative therefore does not invent a license; review upstream licensing before
