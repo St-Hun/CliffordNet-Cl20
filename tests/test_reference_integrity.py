@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from scripts.reference_inventory import build_inventory
+from cliffordnet_cl20.reference_inventory import build_inventory
 
 
 def test_inventory_detects_content_addition_and_deletion(tmp_path: Path) -> None:
