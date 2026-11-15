@@ -1,0 +1,12 @@
+model:
+  name: roll_shift_d25_s3
+  family: roll_shift
+  depth: 25
+  shifts: [0, 1, 2]
+  embed_dim: 128
+  patch_size: 2
+provenance:
+  status: checkpoint_verified
+  checkpoint_filename: best_model_mustardnet_25_3.pth
+  checkpoint_tensor_elements: 2564350
+  historical_best_accuracy: 80.57
