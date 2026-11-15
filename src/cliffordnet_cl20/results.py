@@ -124,17 +124,17 @@ def validate_manifest(data: Mapping, root: Path = Path(".")) -> None:
 
 def render_results_table(data: Mapping) -> str:
     titles = {
-        "official": "Official CliffordNet",
-        "roll_shift": "Cl(2,0) Roll & Shift",
-        "shuffle": "Geometric Shuffle",
+        "official": "🧱 Official CliffordNet",
+        "roll_shift": "🔄 Cl(2,0) Roll & Shift",
+        "shuffle": "🔀 Geometric Shuffle",
     }
     lines = []
     for family in ("official", "roll_shift", "shuffle"):
-        lines.extend((f"### {titles[family]}", "", "| Model | Parameters | Top-1 | Status |", "|---|---:|---:|---|"))
+        lines.extend((f"### {titles[family]}", "", "| Model | Parameters | Top-1 |", "|---|---:|---:|"))
         for row in data["results"]:
             if row["family"] != family:
                 continue
             accuracy = "-" if row.get("top1") is None else f"{row['top1']:.2f}%"
-            lines.append(f"| `{row['model']}` | {row['parameters']:,} | {accuracy} | `{row['status']}` |")
+            lines.append(f"| `{row['model']}` | {row['parameters']:,} | **{accuracy}** |")
         lines.append("")
     return "\n".join(lines).rstrip()

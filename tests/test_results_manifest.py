@@ -25,6 +25,15 @@ def test_manifest_is_valid_and_renders_separate_families(manifest):
     assert "82.46" in rendered
 
 
+def test_public_results_table_hides_evidence_status_and_uses_visual_family_labels(manifest):
+    rendered = render_results_table(manifest)
+    assert "| Status |" not in rendered
+    assert "official_reported" not in rendered
+    assert "🧱 Official CliffordNet" in rendered
+    assert "🔄 Cl(2,0) Roll & Shift" in rendered
+    assert "🔀 Geometric Shuffle" in rendered
+
+
 @pytest.mark.parametrize("mutation,match", [
     (lambda row: row.update(status="claimed"), "status"),
     (lambda row: row.update(evidence=[]), "evidence"),
