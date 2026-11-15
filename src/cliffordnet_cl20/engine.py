@@ -6,6 +6,7 @@ import csv
 import hashlib
 import json
 import os
+import random
 import subprocess
 import sys
 from collections.abc import Callable
@@ -91,10 +92,20 @@ def _atomic_json(path: Path, value) -> None:
     os.replace(temporary, path)
 
 
-def _save_checkpoint(path, model, optimizer, scheduler, epoch, best_accuracy):
+def _save_checkpoint(path, model, optimizer, scheduler, epoch, best_accuracy, train_loader):
     temporary = path.with_suffix(path.suffix + ".tmp")
-    torch.save({"model": model.state_dict(), "optimizer": optimizer.state_dict(), "scheduler": scheduler.state_dict(),
-                "epoch": epoch, "best_accuracy": best_accuracy}, temporary)
+    generator = getattr(train_loader, "generator", None)
+    torch.save({
+        "model": model.state_dict(),
+        "optimizer": optimizer.state_dict(),
+        "scheduler": scheduler.state_dict(),
+        "epoch": epoch,
+        "best_accuracy": best_accuracy,
+        "torch_rng_state": torch.get_rng_state(),
+        "cuda_rng_state": torch.cuda.get_rng_state_all() if torch.cuda.is_available() else [],
+        "python_rng_state": random.getstate(),
+        "loader_rng_state": generator.get_state() if generator is not None else None,
+    }, temporary)
     os.replace(temporary, path)
 
 
@@ -116,9 +127,28 @@ def fit(model, train_loader, eval_loader, output_dir: Path, *, epochs: int, lr: 
         optimizer.load_state_dict(checkpoint["optimizer"])
         scheduler.load_state_dict(checkpoint["scheduler"])
         start_epoch, best_accuracy = int(checkpoint["epoch"]), float(checkpoint["best_accuracy"])
-    record = RunRecord(seed=seed, parameter_count=sum(p.numel() for p in model.parameters()),
-                       environment=collect_environment(), command=sys.argv, git=_git_state(),
-                       dataset_identity=dataset_identity or {}, resolved_config=resolved_config or {})
+        torch.set_rng_state(checkpoint["torch_rng_state"].cpu())
+        if torch.cuda.is_available() and checkpoint["cuda_rng_state"]:
+            torch.cuda.set_rng_state_all(checkpoint["cuda_rng_state"])
+        random.setstate(checkpoint["python_rng_state"])
+        generator = getattr(train_loader, "generator", None)
+        if generator is not None and checkpoint["loader_rng_state"] is not None:
+            generator.set_state(checkpoint["loader_rng_state"].cpu())
+    prior_epochs = []
+    prior_record_path = output_dir / "run.json"
+    if resume and prior_record_path.is_file():
+        prior_epochs = json.loads(prior_record_path.read_text()).get("epochs", [])
+        prior_epochs = [metrics for metrics in prior_epochs if metrics.get("epoch", 0) <= start_epoch]
+    record = RunRecord(
+        seed=seed,
+        parameter_count=sum(p.numel() for p in model.parameters()),
+        environment=collect_environment(),
+        command=sys.argv,
+        git=_git_state(),
+        dataset_identity=dataset_identity or {},
+        resolved_config=resolved_config or {},
+        epochs=prior_epochs,
+    )
     _atomic_json(output_dir / "run.json", asdict(record))
     criterion = nn.CrossEntropyLoss()
     try:
@@ -146,11 +176,13 @@ def fit(model, train_loader, eval_loader, output_dir: Path, *, epochs: int, lr: 
                 if handle.tell() == 0:
                     writer.writeheader()
                 writer.writerow(metrics)
-            if validation.accuracy > best_accuracy:
+            improved = validation.accuracy > best_accuracy
+            if improved:
                 best_accuracy = validation.accuracy
-                _save_checkpoint(output_dir / "checkpoint-best.pt", model, optimizer, scheduler, epoch, best_accuracy)
             scheduler.step()
-            _save_checkpoint(output_dir / "checkpoint-final.pt", model, optimizer, scheduler, epoch, best_accuracy)
+            if improved:
+                _save_checkpoint(output_dir / "checkpoint-best.pt", model, optimizer, scheduler, epoch, best_accuracy, train_loader)
+            _save_checkpoint(output_dir / "checkpoint-final.pt", model, optimizer, scheduler, epoch, best_accuracy, train_loader)
             _atomic_json(output_dir / "run.json", asdict(record))
             if epoch_callback:
                 epoch_callback(epoch, metrics)

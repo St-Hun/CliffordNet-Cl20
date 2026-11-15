@@ -96,15 +96,30 @@ def validate_manifest(data: Mapping, root: Path = Path(".")) -> None:
         if row.get("parameters") != expected:
             raise ManifestError(f"parameter count mismatch for {row.get('model')}: {row.get('parameters')} != {expected}")
         if row["status"] == "reproduced":
-            complete = False
+            valid_record = False
             for relative in evidence:
                 try:
                     record = json.loads((root / relative).read_text())
-                    complete |= record.get("status") == "complete"
+                    resolved = record.get("resolved_config", {})
+                    model_config = resolved.get("model", {})
+                    recorded_model = model_config.get("name") or model_config.get("model")
+                    protocol = resolved.get("protocol", {})
+                    execution = resolved.get("execution", {})
+                    final_accuracy = record.get("epochs", [{}])[-1].get("eval_accuracy")
+                    valid_record |= (
+                        record.get("status") == "complete"
+                        and not execution.get("smoke", False)
+                        and recorded_model == row["model"]
+                        and protocol.get("name") == row["protocol"]
+                        and record.get("seed") == row["seed"]
+                        and record.get("parameter_count") == row["parameters"]
+                        and final_accuracy is not None
+                        and abs(final_accuracy * 100 - row["top1"]) < 1e-9
+                    )
                 except (json.JSONDecodeError, UnicodeDecodeError):
                     pass
-            if not complete:
-                raise ManifestError("reproduced result requires a complete run record")
+            if not valid_record:
+                raise ManifestError("reproduced result requires a matching complete non-smoke run record")
 
 
 def render_results_table(data: Mapping) -> str:

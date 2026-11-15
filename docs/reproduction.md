@@ -6,7 +6,7 @@ Python 3.10 is locked by `pyproject.toml` and dependencies are frozen in `uv.loc
 
 ```bash
 uv sync
-uv run python scripts/environment_report.py
+uv run python scripts/verify_environment.py
 uv run pytest
 ```
 

@@ -13,6 +13,7 @@ from cliffordnet_cl20.config import load_experiment
 from cliffordnet_cl20.data import build_cifar100_loaders
 from cliffordnet_cl20.engine import fit
 from cliffordnet_cl20.models.registry import build_model
+from cliffordnet_cl20.reproducibility import seed_everything
 
 
 def main():
@@ -36,6 +37,7 @@ def main():
         protocol, args.data_dir, args.download,
         num_workers_override=0 if args.epochs_smoke else None,
     )
+    seed_everything(int(protocol["seed"]), bool(protocol["deterministic"]))
     model = build_model(config.model_name)
     epochs = args.epochs_smoke or int(protocol["epochs"])
     smoke_batches = 2 if args.epochs_smoke else None
@@ -46,7 +48,16 @@ def main():
                  max_eval_batches=smoke_batches,
                  dataset_identity={"name": "CIFAR100", "root": str(args.data_dir.resolve()),
                                    "train_examples": len(train_loader.dataset), "evaluation_examples": len(eval_loader.dataset)},
-                 resolved_config={"model": config.model, "protocol": protocol})
+                 resolved_config={
+                     "model": config.model,
+                     "protocol": protocol,
+                     "execution": {
+                         "smoke": args.epochs_smoke is not None,
+                         "requested_epochs": epochs,
+                         "max_train_batches": smoke_batches,
+                         "max_eval_batches": smoke_batches,
+                     },
+                 })
     print(json.dumps(asdict(record), indent=2))
 
 
