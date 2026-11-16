@@ -16,8 +16,12 @@ explicit multivector basis throughout the interaction, creates parallel
 intermediate branches, and makes the result sensitive to the selected shift
 distances.
 
-This work preserves the same stem, residual blocks, optimizer, augmentations,
-and evaluation protocol, while changing only the geometric channel interaction:
+All variants use the same CAN comparison framework, spatial-mixing pattern,
+optimizer, augmentations, and evaluation protocol. Roll & Shift retains CAN's
+residual gating while replacing the geometric channel interaction; its recorded
+implementation uses a bias-free convolution and BatchNorm in the stem. The
+later Geometric Shuffle experiment additionally uses a lighter gate and
+residual fusion.
 
 1. **Explicit Cl(2,0) multivectors.** Every four channels are interpreted as
    `(e0, e1, e2, e12)`. A group is always moved as one unit, so a permutation
@@ -87,13 +91,11 @@ baseline while using fewer parameters.
 |---|---|---|---:|---:|
 | Shuffle 14 | `[2,4,8]` | Nano | 78.74% (+0.92 pp) | 1,439,716 (+0.5%) |
 | Shuffle 26 | `[2,4,8]` | Lite | **81.02% (+1.97 pp)** | 2,659,300 (+1.8%) |
-| Shuffle 56 | `[2,4,8]` | 32 | 81.61% (+0.19 pp) | 4,790,756 (-1.1%) |
-| Shuffle 64 | `[2,4,6]` | 64 | 81.81% (-0.65 pp) | 5,472,740 (-36.5%) |
 
-Runnable configurations are included for Shuffle 14 and 26, whose architecture
-and parameter counts match the retained implementation exactly. Shuffle 56 and
-64 are historical result rows because their final architecture was not
-preserved completely.
+Only Shuffle 14 and 26 are listed because their retained model definitions
+reproduce the recorded architectures and parameter counts exactly. Later
+Shuffle 56 and 64 logs are not used for comparison because their final model
+definitions were not preserved completely.
 
 ## 🖥️ Original CAN execution environment
 
@@ -101,8 +103,12 @@ The reported experiments were run in the original CAN environment, not in a
 separate benchmark setup.
 
 - **Hardware:** NVIDIA GeForce RTX 4090 24GB
-- **System:** Linux 6.8.0-106-generic, CUDA 12.9
-- **Runtime:** Python 3.10.19, PyTorch 2.10.0, TorchVision 0.25.0, Triton 3.6.0
+- **Historical host:** Linux 6.8; the preserved Roll 25-3 run used
+  `6.8.0-101-generic`
+- **Python:** 3.10.19 for the reported run; the project supports Python 3.10.x
+- **PyTorch runtime:** PyTorch 2.10.0, TorchVision 0.25.0, CUDA 12.8,
+  cuDNN 9.28.1, Triton 3.6.0
+- **NVIDIA driver:** reported CUDA compatibility 12.9
 - **Dataset:** CIFAR-100, 200 epochs, batch size 128, seed 42
 - **Optimization:** AdamW, learning rate `1e-3`, weight decay `0.1`, cosine
   annealing, no warm-up

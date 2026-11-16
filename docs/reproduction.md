@@ -2,10 +2,13 @@
 
 ## Environment
 
-The lockfile reproduces the software versions used in the original CAN
-environment: Python 3.10, PyTorch 2.10.0, TorchVision 0.25.0, and optional
-Triton 3.6.0. The reported runs used an NVIDIA GeForce RTX 4090 24GB with
-CUDA 12.9 on Linux.
+The lockfile reproduces the core package versions used in the original CAN
+environment: PyTorch 2.10.0, TorchVision 0.25.0, and optional Triton 3.6.0.
+The reported Roll 25-3 run used Python 3.10.19 on an NVIDIA GeForce RTX 4090
+24GB. PyTorch used its CUDA 12.8 runtime; the NVIDIA driver reported CUDA 12.9
+compatibility.
+The project accepts Python 3.10.x, so `uv` may select a different 3.10 patch
+release unless Python 3.10.19 is already installed or selected explicitly.
 
 ```bash
 uv sync
