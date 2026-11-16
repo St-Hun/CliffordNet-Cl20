@@ -25,8 +25,8 @@ def roll_multivector_groups(value: Tensor, shift: int) -> Tensor:
 class Cl20RollShiftInteraction(nn.Module):
     """Apply the Cl(2,0) product across shifted multivector groups.
 
-    The commuting pair is shifted by ``+s`` and the anticommuting pair by
-    ``-s`` before multiplication.
+    The same ``+s`` shift is applied to both complex pairs, matching the
+    historical experiments and keeping each multivector group together.
     """
 
     def __init__(self, dim: int, shifts: tuple[int, ...] | list[int]):
@@ -47,7 +47,7 @@ class Cl20RollShiftInteraction(nn.Module):
         branches = []
         for shift in self.shifts:
             shifted_comm = torch.roll(context_comm, shift, dims=1)
-            shifted_anti = torch.roll(context_anti, -shift, dims=1)
+            shifted_anti = torch.roll(context_anti, shift, dims=1)
             out_comm = state_comm * shifted_comm + state_anti * torch.conj(shifted_anti)
             out_anti = state_comm * shifted_anti + state_anti * torch.conj(shifted_comm)
             out_comm = torch.complex(F.silu(out_comm.real), out_comm.imag)

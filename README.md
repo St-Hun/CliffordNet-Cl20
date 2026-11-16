@@ -32,11 +32,12 @@ and evaluation protocol, while changing only the geometric channel interaction:
 
 ### 🔄 How Roll & Shift works
 
-For each branch, the commuting pair is rolled by `+s` and the anticommuting pair
-by `-s` before the full geometric product. Including `s=0` retains an unshifted,
-complete Clifford product. The intent is to preserve the original CliffordNet
-comparison framework while replacing scalar-channel approximations with actual
-Cl(2,0) multivector interactions.
+For each branch, the same `+s` group roll is applied to both complex pairs
+before the full geometric product. This keeps each `(e0, e1, e2, e12)` group
+together and matches the implementation used for the reported experiments.
+Including `s=0` retains an unshifted, complete Clifford product. The intent is
+to preserve the original CliffordNet comparison framework while replacing
+scalar-channel approximations with actual Cl(2,0) multivector interactions.
 
 ### 🔀 How Geometric Shuffle works
 

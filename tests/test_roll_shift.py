@@ -15,6 +15,26 @@ def test_group_roll_keeps_basis_components_together():
     torch.testing.assert_close(rolled, expected)
 
 
+def test_roll_shift_uses_the_same_positive_shift_for_both_complex_pairs():
+    layer = Cl20RollShiftInteraction(12, shifts=(1,))
+    with torch.no_grad():
+        layer.proj.weight.zero_()
+        layer.proj.bias.zero_()
+        for channel in range(12):
+            layer.proj.weight[channel, channel, 0, 0] = 1
+
+    state = torch.zeros(1, 12, 1, 1)
+    state[:, [0, 4, 8]] = 1
+    context = torch.zeros_like(state)
+    context[:, [1, 5, 9]] = torch.tensor([10.0, 20.0, 30.0]).view(1, 3, 1, 1)
+
+    output = layer(state, context)
+    torch.testing.assert_close(
+        output[:, [1, 5, 9]],
+        torch.tensor([30.0, 10.0, 20.0]).view(1, 3, 1, 1),
+    )
+
+
 def test_interaction_preserves_shape_and_records_zero_branch():
     layer = Cl20RollShiftInteraction(16, shifts=(0, 1, 2))
     state = torch.randn(2, 16, 5, 5)
