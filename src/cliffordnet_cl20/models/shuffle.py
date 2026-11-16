@@ -43,7 +43,7 @@ class Cl20ShuffleNet(nn.Module):
         if embed_dim % 4:
             raise ValueError("embed_dim must be divisible by 4")
         if patch_size != 2:
-            raise ValueError("source-recovered shuffle model requires patch_size=2")
+            raise ValueError("patch_size must be 2")
         self.patch_embed = nn.Sequential(
             nn.Conv2d(3, embed_dim, 3, stride=2, padding=1, bias=False),
             nn.BatchNorm2d(embed_dim),

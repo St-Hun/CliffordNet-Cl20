@@ -19,10 +19,10 @@ def roll_multivector_groups(value: Tensor, shift: int) -> Tensor:
 
 
 class Cl20RollShiftInteraction(nn.Module):
-    """Recovered interaction used by the verified historical 25-3 checkpoint.
+    """Apply the Cl(2,0) product across shifted multivector groups.
 
     The commuting pair is shifted by ``+s`` and the anticommuting pair by
-    ``-s``.  Each branch then applies the full Cl(2,0) geometric product.
+    ``-s`` before multiplication.
     """
 
     def __init__(self, dim: int, shifts: tuple[int, ...] | list[int]):

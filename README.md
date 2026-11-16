@@ -132,5 +132,6 @@ For a short integration check, append `--epochs-smoke 1`. See
 - `docs/reproduction.md`: reproducible training and evaluation commands
 
 No upstream license file was present in the pinned source snapshot. This local
-derivative therefore does not invent a license; review upstream licensing before
-publishing it publicly. Attribution is recorded in `THIRD_PARTY_NOTICE.md`.
+derivative therefore does not invent a license. Confirm redistribution terms
+with the upstream author before reusing upstream-derived code. Attribution is
+recorded in `THIRD_PARTY_NOTICE.md`.

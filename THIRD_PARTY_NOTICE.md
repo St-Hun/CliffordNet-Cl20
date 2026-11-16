@@ -10,5 +10,5 @@ Geometric Algebra** by Zhongping Ji.
 
 The official baseline is retained to make comparisons with the Cl(2,0)
 Roll & Shift and Geometric Shuffle variants auditable. Upstream currently
-does not expose a root license file. This derivative must remain local or
-private until redistribution terms are confirmed with the upstream author.
+does not expose a root license file. Confirm redistribution terms with the
+upstream author before reusing upstream-derived code.

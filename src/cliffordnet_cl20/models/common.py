@@ -1,4 +1,4 @@
-"""Shared layers preserving the historical CliffordNet behavior."""
+"""Layers shared by the model variants."""
 
 import torch
 from torch import nn

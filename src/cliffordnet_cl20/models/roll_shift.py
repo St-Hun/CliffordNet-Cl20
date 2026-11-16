@@ -1,4 +1,4 @@
-"""Recovered Cl(2,0) Roll & Shift network in the CliffordNet recipe."""
+"""Cl(2,0) Roll & Shift network."""
 
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ class Cl20RollShiftBlock(nn.Module):
             nn.BatchNorm2d(dim),
             nn.SiLU(),
         )
-        # Historical name retained so recovered checkpoints load strictly.
+        # Keep this name for compatibility with existing checkpoints.
         self.mustard_conv = Cl20RollShiftInteraction(dim, shifts)
         self.gate_fc = nn.Conv2d(dim * 2, dim, kernel_size=1)
         self.gamma = nn.Parameter(torch.full((1, dim, 1, 1), init_values))
@@ -46,7 +46,7 @@ class Cl20RollShiftNet(nn.Module):
         if embed_dim % 4:
             raise ValueError("embed_dim must be divisible by 4")
         if patch_size != 2:
-            raise ValueError("recovered portfolio models require patch_size=2")
+            raise ValueError("patch_size must be 2")
         self.patch_embed = nn.Sequential(
             nn.Conv2d(3, embed_dim, 3, stride=2, padding=1, bias=False),
             nn.BatchNorm2d(embed_dim),
