@@ -5,7 +5,9 @@ from torch import nn
 
 
 class OfficialCliffordInteraction(nn.Module):
-    def __init__(self, dim: int, cli_mode: str = "full", ctx_mode: str = "diff", shifts=(1, 2)):
+    def __init__(
+        self, dim: int, cli_mode: str = "full", ctx_mode: str = "diff", shifts=(1, 2)
+    ):
         super().__init__()
         self.dim = dim
         self.cli_mode = cli_mode

@@ -1,8 +1,5 @@
-from pathlib import Path
-
 import pytest
 import torch
-import yaml
 
 from cliffordnet_cl20.layers.roll_shift import (
     Cl20RollShiftInteraction,
@@ -43,21 +40,19 @@ def test_verified_25_3_signature_and_parameter_count():
     assert sum(t.numel() for t in state.values()) == 2_564_350
 
 
-@pytest.mark.parametrize("name,depth,branch_count", [
-    ("roll_shift_d16_s2", 16, 2),
-    ("roll_shift_d18_s5", 18, 5),
-    ("roll_shift_d25_s3", 25, 3),
-    ("roll_shift_d32_s5", 32, 5),
-    ("roll_shift_d48_s2", 48, 2),
-    ("roll_shift_d52_s3", 52, 3),
-])
+@pytest.mark.parametrize(
+    "name,depth,branch_count",
+    [
+        ("roll_shift_d16_s2", 16, 2),
+        ("roll_shift_d18_s5", 18, 5),
+        ("roll_shift_d25_s3", 25, 3),
+        ("roll_shift_d32_s5", 32, 5),
+        ("roll_shift_d48_s2", 48, 2),
+        ("roll_shift_d52_s3", 52, 3),
+    ],
+)
 def test_portfolio_configurations_are_explicit(name, depth, branch_count):
     spec = get_model_spec(name)
     assert spec.family == "roll_shift"
     assert spec.depth == depth
     assert len(spec.shifts) == branch_count
-    path = Path("configs/roll_shift") / f"d{depth}_s{branch_count}.yaml"
-    config = yaml.safe_load(path.read_text())
-    assert config["model"]["name"] == name
-    assert config["model"]["depth"] == depth
-    assert tuple(config["model"]["shifts"]) == spec.shifts

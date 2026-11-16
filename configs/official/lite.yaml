@@ -1,9 +1,0 @@
-model: official_lite
-family: official
-depth: 12
-embed_dim: 128
-patch_size: 2
-cli_mode: full
-context_mode: diff
-shifts: [1, 2, 4, 8, 16]
-drop_path_rate: 0.3

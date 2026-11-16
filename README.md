@@ -113,22 +113,26 @@ separate benchmark setup.
 ```bash
 uv sync
 uv run pytest
-uv run python scripts/train.py \
-  --model configs/roll_shift/d25_s3.yaml \
-  --protocol configs/protocols/cifar100_official_2026_02.yaml \
+uv run python train.py \
+  --model roll_shift_d25_s3 \
   --data-dir data --download --device cuda
 ```
 
-For a short integration check, append `--epochs-smoke 1`. See
-[docs/reproduction.md](docs/reproduction.md) for resume and evaluation commands.
+This is the original CAN training flow: every training epoch has a live `tqdm`
+progress bar, every test epoch prints its accuracy, W&B logging is enabled, and
+the best weights are saved as a plain PyTorch `state_dict`. For a one-epoch
+check without W&B, append `--epochs 1 --wandb-mode disabled`.
+
+See [docs/reproduction.md](docs/reproduction.md) for all model names and
+evaluation commands.
 
 ## 🗂 Repository scope
 
 - `src/cliffordnet_cl20/models/official.py`: official baseline pinned to commit `28119c5`
 - `src/cliffordnet_cl20/models/roll_shift.py`: full Cl(2,0) Roll & Shift
 - `src/cliffordnet_cl20/models/shuffle.py`: structure-preserving Geometric Shuffle
-- `configs/`: explicit architecture and locked protocol configurations
-- `scripts/`: training, evaluation, checkpoint, and environment utilities
+- `train.py`: CAN-style CIFAR-100 training entry point for every model
+- `scripts/`: evaluation, checkpoint, and environment utilities
 - `docs/reproduction.md`: reproducible training and evaluation commands
 
 No upstream license file was present in the pinned source snapshot. This local

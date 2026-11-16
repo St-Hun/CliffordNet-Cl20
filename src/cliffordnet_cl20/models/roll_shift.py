@@ -11,7 +11,13 @@ from .common import DropPath, LayerNorm2d
 
 
 class Cl20RollShiftBlock(nn.Module):
-    def __init__(self, dim: int, shifts: tuple[int, ...], drop_path: float = 0.1, init_values: float = 1e-5):
+    def __init__(
+        self,
+        dim: int,
+        shifts: tuple[int, ...],
+        drop_path: float = 0.1,
+        init_values: float = 1e-5,
+    ):
         super().__init__()
         self.norm = LayerNorm2d(dim)
         self.get_state = nn.Conv2d(dim, dim, kernel_size=1)
@@ -39,9 +45,15 @@ class Cl20RollShiftBlock(nn.Module):
 
 
 class Cl20RollShiftNet(nn.Module):
-    def __init__(self, num_classes: int = 100, patch_size: int = 2, embed_dim: int = 128,
-                 shifts: tuple[int, ...] = (0, 1, 2), depth: int = 25,
-                 drop_path_rate: float = 0.3):
+    def __init__(
+        self,
+        num_classes: int = 100,
+        patch_size: int = 2,
+        embed_dim: int = 128,
+        shifts: tuple[int, ...] = (0, 1, 2),
+        depth: int = 25,
+        drop_path_rate: float = 0.3,
+    ):
         super().__init__()
         if embed_dim % 4:
             raise ValueError("embed_dim must be divisible by 4")
@@ -52,7 +64,12 @@ class Cl20RollShiftNet(nn.Module):
             nn.BatchNorm2d(embed_dim),
         )
         rates = torch.linspace(0, drop_path_rate, depth).tolist()
-        self.blocks = nn.ModuleList([Cl20RollShiftBlock(embed_dim, shifts, rates[index]) for index in range(depth)])
+        self.blocks = nn.ModuleList(
+            [
+                Cl20RollShiftBlock(embed_dim, shifts, rates[index])
+                for index in range(depth)
+            ]
+        )
         self.norm = nn.LayerNorm(embed_dim)
         self.head = nn.Linear(embed_dim, num_classes)
         self.apply(self._init_weights)

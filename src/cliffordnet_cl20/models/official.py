@@ -9,7 +9,9 @@ from .common import DropPath, LayerNorm2d
 
 
 class CliffordAlgebraBlock(nn.Module):
-    def __init__(self, dim, cli_mode="full", ctx_mode="diff", shifts=(1, 2), drop_path=0.1):
+    def __init__(
+        self, dim, cli_mode="full", ctx_mode="diff", shifts=(1, 2), drop_path=0.1
+    ):
         super().__init__()
         self.get_state = nn.Conv2d(dim, dim, kernel_size=1)
         self.get_context_local = nn.Sequential(
@@ -20,7 +22,9 @@ class CliffordAlgebraBlock(nn.Module):
         )
         self.enable_gFFNG = False
         self.norm = LayerNorm2d(dim)
-        self.clifford_interaction_local = OfficialCliffordInteraction(dim, cli_mode, ctx_mode, shifts)
+        self.clifford_interaction_local = OfficialCliffordInteraction(
+            dim, cli_mode, ctx_mode, shifts
+        )
         self.act = nn.SiLU()
         self.gate_fc = nn.Conv2d(dim * 2, dim, kernel_size=1)
         self.gamma = nn.Parameter(torch.full((1, dim, 1, 1), 1e-5))
@@ -55,7 +59,9 @@ class GeometricStem(nn.Module):
                 nn.Conv2d(in_chans, embed_dim // 2, 3, stride=2, padding=1, bias=False),
                 nn.BatchNorm2d(embed_dim // 2),
                 nn.SiLU(),
-                nn.Conv2d(embed_dim // 2, embed_dim, 3, stride=2, padding=1, bias=False),
+                nn.Conv2d(
+                    embed_dim // 2, embed_dim, 3, stride=2, padding=1, bias=False
+                ),
             )
         else:
             self.proj = nn.Conv2d(in_chans, embed_dim, patch_size, stride=patch_size)
@@ -66,12 +72,27 @@ class GeometricStem(nn.Module):
 
 
 class OfficialCliffordNet(nn.Module):
-    def __init__(self, num_classes=100, patch_size=2, embed_dim=128, cli_mode="full", ctx_mode="diff", shifts=(1, 2), depth=12, drop_path_rate=0.3):
+    def __init__(
+        self,
+        num_classes=100,
+        patch_size=2,
+        embed_dim=128,
+        cli_mode="full",
+        ctx_mode="diff",
+        shifts=(1, 2),
+        depth=12,
+        drop_path_rate=0.3,
+    ):
         super().__init__()
         self.patch_embed = GeometricStem(3, embed_dim, patch_size)
         rates = [x.item() for x in torch.linspace(0, drop_path_rate, depth)]
         self.blocks = nn.ModuleList(
-            [CliffordAlgebraBlock(embed_dim, cli_mode, ctx_mode, shifts, rates[index]) for index in range(depth)]
+            [
+                CliffordAlgebraBlock(
+                    embed_dim, cli_mode, ctx_mode, shifts, rates[index]
+                )
+                for index in range(depth)
+            ]
         )
         self.norm = nn.LayerNorm(embed_dim)
         self.head = nn.Linear(embed_dim, num_classes)

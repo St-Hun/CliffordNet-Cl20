@@ -26,10 +26,16 @@ def from_complex_pairs(comm: Tensor, anti: Tensor) -> Tensor:
     if comm.shape != anti.shape:
         raise ValueError("comm and anti tensors must have identical shapes")
     batch, groups, height, width = comm.shape
-    return torch.stack((comm.real, anti.real, -anti.imag, comm.imag), dim=2).view(batch, groups * 4, height, width)
+    return torch.stack((comm.real, anti.real, -anti.imag, comm.imag), dim=2).view(
+        batch, groups * 4, height, width
+    )
 
 
-def geometric_product(left: Tensor, right: Tensor, scalar_activation: Callable[[Tensor], Tensor] | None = None) -> Tensor:
+def geometric_product(
+    left: Tensor,
+    right: Tensor,
+    scalar_activation: Callable[[Tensor], Tensor] | None = None,
+) -> Tensor:
     if left.shape != right.shape:
         raise ValueError("left and right tensors must have identical shapes")
     left_comm, left_anti = to_complex_pairs(left)

@@ -1,7 +1,0 @@
-model:
-  name: roll_shift_d52_s3
-  family: roll_shift
-  depth: 52
-  shifts: [0, 1, 2]
-  embed_dim: 128
-  patch_size: 2

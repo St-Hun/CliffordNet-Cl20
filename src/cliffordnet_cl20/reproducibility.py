@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.metadata
+import os
 import platform
 import random
 import sys
@@ -38,10 +39,14 @@ def seed_everything(seed: int, deterministic: bool = True) -> None:
     import torch
 
     random.seed(seed)
+    os.environ["PYTHONHASHSEED"] = str(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
     if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
         torch.cuda.manual_seed_all(seed)
-    torch.use_deterministic_algorithms(deterministic, warn_only=True)
-    torch.backends.cudnn.benchmark = not deterministic
-    torch.backends.cudnn.deterministic = deterministic
+        torch.backends.cudnn.deterministic = deterministic
+        torch.backends.cudnn.benchmark = not deterministic
+    elif torch.backends.mps.is_available():
+        torch.mps.manual_seed(seed)
+    print(f"Global seed set to {seed}")

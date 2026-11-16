@@ -1,7 +1,0 @@
-model:
-  name: roll_shift_d18_s5
-  family: roll_shift
-  depth: 18
-  shifts: [0, 1, 2, 4, 8]
-  embed_dim: 128
-  patch_size: 2

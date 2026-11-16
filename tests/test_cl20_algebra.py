@@ -35,7 +35,9 @@ def test_basis_multiplication_table() -> None:
         (3, 2): (1, 1),
     }
     for (left_index, right_index), (sign, result_index) in expected.items():
-        product = geometric_product(basis[left_index : left_index + 1], basis[right_index : right_index + 1])
+        product = geometric_product(
+            basis[left_index : left_index + 1], basis[right_index : right_index + 1]
+        )
         want = torch.zeros_like(product)
         want[:, result_index] = sign
         assert torch.equal(product, want), (left_index, right_index)
@@ -46,10 +48,16 @@ def test_complex_product_matches_direct_values_and_gradients(dtype) -> None:
     left = torch.randn(2, 8, 2, 2, dtype=dtype, requires_grad=True)
     right = torch.randn(2, 8, 2, 2, dtype=dtype, requires_grad=True)
     complex_result = geometric_product(left, right)
-    complex_grads = torch.autograd.grad(complex_result.square().sum(), (left, right), retain_graph=True)
+    complex_grads = torch.autograd.grad(
+        complex_result.square().sum(), (left, right), retain_graph=True
+    )
     direct_result = geometric_product_direct(left, right)
     direct_grads = torch.autograd.grad(direct_result.square().sum(), (left, right))
     tolerance = 1e-5 if dtype == torch.float32 else 1e-12
     assert torch.allclose(complex_result, direct_result, atol=tolerance, rtol=tolerance)
-    assert torch.allclose(complex_grads[0], direct_grads[0], atol=tolerance, rtol=tolerance)
-    assert torch.allclose(complex_grads[1], direct_grads[1], atol=tolerance, rtol=tolerance)
+    assert torch.allclose(
+        complex_grads[0], direct_grads[0], atol=tolerance, rtol=tolerance
+    )
+    assert torch.allclose(
+        complex_grads[1], direct_grads[1], atol=tolerance, rtol=tolerance
+    )

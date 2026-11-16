@@ -15,7 +15,11 @@ def roll_multivector_groups(value: Tensor, shift: int) -> Tensor:
         raise ValueError("Cl(2,0) channel width must be divisible by 4")
     batch, channels, height, width = value.shape
     groups = channels // 4
-    return value.reshape(batch, groups, 4, height, width).roll(shift, dims=1).reshape_as(value)
+    return (
+        value.reshape(batch, groups, 4, height, width)
+        .roll(shift, dims=1)
+        .reshape_as(value)
+    )
 
 
 class Cl20RollShiftInteraction(nn.Module):

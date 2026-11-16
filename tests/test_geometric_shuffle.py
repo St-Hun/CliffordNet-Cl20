@@ -1,8 +1,5 @@
-from pathlib import Path
-
 import pytest
 import torch
-import yaml
 
 from cliffordnet_cl20.algebra.cl20 import to_complex_pairs
 from cliffordnet_cl20.layers.geometric_shuffle import (
@@ -14,7 +11,9 @@ from cliffordnet_cl20.models.registry import build_model, get_model_spec
 
 def _labeled_pairs(groups=8):
     labels = torch.arange(groups).reshape(1, groups, 1, 1).float()
-    return torch.complex(labels, labels + 100), torch.complex(labels + 1000, labels + 1100)
+    return torch.complex(labels, labels + 100), torch.complex(
+        labels + 1000, labels + 1100
+    )
 
 
 def test_comm_and_anti_receive_identical_bijective_permutation():
@@ -46,7 +45,9 @@ def test_shuffle_never_splits_a_multivector_tuple():
 def test_shuffle_is_not_a_cyclic_roll():
     comm, anti = _labeled_pairs(8)
     shuffled, _ = geometric_shuffle_pairs(comm, anti, groups=2)
-    assert not any(torch.equal(shuffled, comm.roll(shift, dims=1)) for shift in range(8))
+    assert not any(
+        torch.equal(shuffled, comm.roll(shift, dims=1)) for shift in range(8)
+    )
 
 
 def test_interaction_has_original_plus_shuffle_branches():
@@ -71,7 +72,3 @@ def test_log_verified_shuffle_configurations_are_registered(name, depth, paramet
     model = build_model(name)
     assert len(model.blocks) == depth
     assert sum(parameter.numel() for parameter in model.parameters()) == parameters
-    config = yaml.safe_load((Path("configs/shuffle") / f"d{depth}_g2_4_8.yaml").read_text())
-    assert config["model"]["name"] == name
-    assert config["model"]["depth"] == depth
-    assert config["model"]["groups"] == [2, 4, 8]
